@@ -1,6 +1,7 @@
 const xrpl = require("xrpl");
+require('dotenv').config();
 
-const ACCOUNT_SECRET = "sEdVR1BhyYNM3UbCH7WcphR2372uvnh";
+const ACCOUNT_SECRET = process.env.ACCOUNT_SECRET;
 
 // Fund an account with 10 XRP
 const fundAccount = async (req, res) => {
@@ -8,9 +9,7 @@ const fundAccount = async (req, res) => {
   await client.connect();
 
   const account = req.body.account;
-  console.log("ACCOUNT", account);
   const xrpIssuerWallet = xrpl.Wallet.fromSeed(ACCOUNT_SECRET);
-  console.log("XRP_ISSUER_WALLET", xrpIssuerWallet.address);
 
   try {
     // send 10 XRP to the new account from the XRP issuer
@@ -32,7 +31,6 @@ const fundAccount = async (req, res) => {
       ledger_index: "validated",
     });
 
-    console.log("ACC_INFO", requestTx);
   } catch (e) {
     console.log(e);
     return res.status(500).json({ error: `Error sending transaction: ${e}` })
@@ -54,7 +52,6 @@ const getAccountInfo = async (req, res) => {
       account: account,
       ledger_index: "validated",
     });
-    console.log("ACC_INFO_RESULT", requestRsp);
     return res.json(requestRsp);
   } catch (e) {
     console.log(e);
